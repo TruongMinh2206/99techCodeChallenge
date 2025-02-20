@@ -1,0 +1,38 @@
+ Vấn đề với hàm getPriority
+✅ Vấn đề:
+
+Tham số blockchain có kiểu any, điều này là một thực hành xấu vì không đảm bảo tính an toàn kiểu dữ liệu.
+Dùng switch-case gây dư thừa và kém tối ưu về hiệu suất (O(n)).
+✅ Cách cải thiện:
+
+Dùng object lookup thay vì switch-case để tối ưu tra cứu từ O(n) xuống O(1).
+2️⃣ Sử dụng useMemo chưa tối ưu
+✅ Vấn đề:
+
+Lỗi logic lọc (filter):
+lhsPriority bị undefined do biến này chưa được khai báo trong phạm vi hàm.
+Điều kiện lọc sai: if (balance.amount <= 0) return true; -> điều này khiến các số dư bằng 0 không bị loại bỏ.
+Thực hiện sort() ngay trong useMemo khiến mất hiệu suất.
+✅ Cách cải thiện:
+
+Lọc trước rồi mới sắp xếp, không gộp cả hai trong useMemo.
+Đặt điều kiện lọc chính xác.
+3️⃣ Thực hiện map hai lần không cần thiết
+✅ Vấn đề:
+
+sortedBalances.map(...) chạy hai lần:
+Lần đầu để tạo formattedBalances.
+Lần hai trong rows.
+Điều này gây lặp lại không cần thiết, làm giảm hiệu suất.
+✅ Cách cải thiện:
+
+Kết hợp cả hai map vào một vòng lặp duy nhất khi render rows.
+4️⃣ Sử dụng kiểu dữ liệu chưa chính xác
+✅ Vấn đề:
+
+WalletBalance không có thuộc tính blockchain, nhưng code lại sử dụng balance.blockchain -> có thể gây lỗi kiểu.
+formattedBalances nên có kiểu dữ liệu rõ ràng, tránh dùng kiểu any.
+✅ Cách cải thiện:
+
+Bổ sung kiểu dữ liệu chính xác cho WalletBalance.
+Đảm bảo mỗi đối tượng có đủ thuộc tính trước khi truy cập.
